@@ -1,0 +1,32 @@
+.centralizar {
+  text-align: center;
+}
+
+.cabecalho {
+  background-color: #021a4b;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.justificado {
+  text-align: justify;
+}
+
+.text-white {
+  color: white;
+}
+
+.p-1 {
+  padding: 0.25rem;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.ml-5 {
+  margin-left: 2rem;
+}
