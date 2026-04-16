@@ -5,6 +5,11 @@ import ListRender from './components/ListRender';
 import CondicionalRender from './components/CondicionalRender';
 import ShowUserName from './components/ShowUserName';
 import CarDetails from './components/CarDetails';
+import Fragment from './components/Fragment';
+import Container from './components/Container';
+import ExecuteFunction from './components/ExecuteFunction';
+import Message from './components/Message';
+import ChangeMessageState from './components/ChangeMessageState';
 
 import './App.css';
 
@@ -17,6 +22,15 @@ function App() {
     { id: 2, brand: "KIA", color: "Branco", km: 200000 },
     { id: 3, brand: "Renault", color: "Azul", km: 32000 },
   ];
+
+  function showMessage(){
+    console.log('chamou funcao')
+  }
+
+  const [message, setMessage] = useState("");
+  const handleMessage = (msg) => {
+    setMessage(msg);
+  }
 
   return (
     <>
@@ -51,6 +65,17 @@ function App() {
           />
         ))}
       </div>
+      {/* Fragments */}
+      <Fragment/>
+      {/* Children */}
+      <Container valorTeste="valorParam">
+        <p>Conteudo do container</p>
+      </Container>
+      {/* Função prop*/}
+      <ExecuteFunction myFunction={showMessage}/>
+      {/* State lift */}
+      <Message msg={message}/>
+      <ChangeMessageState handleMessage={handleMessage}/>
     </>
   )
 }
