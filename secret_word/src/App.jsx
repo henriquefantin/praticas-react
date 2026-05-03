@@ -1,120 +1,147 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+// Css
+import './App.css';
+
+// React
+import { useCallback, useEffect, useState } from 'react';
+
+// Data
+import { wordsList } from './data/words';
+
+// Components
+import StartScreen from './components/StartScreen';
+import Game from './components/Game';
+import GameOver from './components/GameOver';
+
+const stages = [
+  { id: 1, name: "start" },
+  { id: 2, name: "game" },
+  { id: 3, name: "end" },
+]
+
+const guessesQty = 5;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [gameStage, setGameStage] = useState(stages[0].name);
+  const [words] = useState(wordsList);
+
+  const [pickedCategory, setPickedCategory] = useState("");
+  const [pickedWord, setPickedWord] = useState("");
+  const [letters, setLetters] = useState([]);
+
+  const [guessedLetters, setGuessedLetters] = useState([]);
+  const [wrongLetters, setWrongLetters] = useState([]);
+  const [guesses, setGuesses] = useState(guessesQty);
+  const [score, setScore] = useState(0);
+
+  const pickWordCategory = useCallback(() => {
+    // Escolher categoria aleatória
+    const categories = Object.keys(words);
+    const category = categories[Math.floor(Math.random() * Object.keys(categories).length)];
+
+    // Escolher palavra aleatória da categoria
+    const word = words[category][Math.floor(Math.random() * words[category].length)];
+
+    return { word, category };
+  }, [words]);
+
+  // Controlador do jogo - iniciar, jogar e terminar
+  const startGame = useCallback(() => {
+    // Escolher palavra e categoria
+    const { word, category } = pickWordCategory();
+
+    let wordLetters = word.split("");
+    let wordLettersLower = wordLetters.map(letra => letra.toLowerCase());
+
+    // Definir dados encontrados
+    setPickedCategory(category);
+    setPickedWord(word);
+    setLetters(wordLettersLower);
+
+    // Iniciar o jogo
+    setGameStage(stages[1].name);
+  }, [pickWordCategory]);
+
+  // Processar as entradas do jogo
+  const verifyLetter = (letter) => {
+    const letterToLower = letter.toLowerCase();
+
+    // Verificar se a letra já foi utilizada
+    if (guessedLetters.includes(letterToLower) || wrongLetters.includes(letterToLower)) {
+      return;
+    }
+
+    // Verificar se a letra pertence à palavra
+    if (letters.includes(letterToLower)) {
+      setGuessedLetters((actualGuessedLetters) => [
+        ...actualGuessedLetters,
+        letterToLower
+      ]);
+    } else {
+      setWrongLetters((actualWrongLetters) => [
+        ...actualWrongLetters,
+        letterToLower
+      ]);
+
+      setGuesses((actualGuesses) => actualGuesses - 1);
+    }
+  }
+
+  const clearLetterStates = () => {
+    setGuessedLetters([]);
+    setWrongLetters([]);
+  }
+
+  // Tentativas terminadas
+  useEffect(() => {
+    // Reiniciar o jogo
+    if (guesses <= 0) {
+      clearLetterStates();
+      setGameStage(stages[2].name);
+    }
+  }, [guesses]);
+
+  // Conferir vitória
+  useEffect(() => {
+    const uniqueLetters = [...new Set(letters)];
+
+    // Vitória
+    if (guessedLetters.length === uniqueLetters.length) {
+      // Adicionar pontuação
+      setScore((actualScore) => actualScore += 100);
+      
+      // Reiniciar o jogo
+      clearLetterStates();
+      startGame();
+    }
+  }, [guessedLetters, letters, startGame]);
+
+  // Reiniciar o jogo
+  const retry = () => {
+    setScore(0);
+    setGuesses(guessesQty);
+
+    setGameStage(stages[0].name);
+  }
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      <div className="centralizado">
+        {gameStage === stages[0].name && <StartScreen startGame={startGame} />}
+        {
+          gameStage === stages[1].name &&
+          <Game
+            verifyLetter={verifyLetter}
+            pickedCategory={pickedCategory}
+            pickedWord={pickedWord}
+            letters={letters}
+            guessedLetters={guessedLetters}
+            wrongLetters={wrongLetters}
+            guesses={guesses}
+            score={score}
+          />
+        }
+        {gameStage === stages[2].name && <GameOver retry={retry} score={score} />}
+      </div>
     </>
   )
 }
