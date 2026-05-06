@@ -48,14 +48,14 @@ function App() {
     // const addedProduct = await response.json();
     // setProducts((prevProducts) => [...prevProducts, addedProduct]);
 
-    httpConfig(product, "POST", null);
+    httpConfig(product, "POST");
     setName("");
     setPrice("");
   }
 
   // Excluir produtos
   const handleDeleteProduct = async (id) => {
-    httpConfig(null, "DELETE", id);
+    httpConfig(id, "DELETE");
   }
 
   return (

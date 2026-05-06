@@ -17,7 +17,7 @@ export const useFetch = (url) => {
     // Tratar erros
     const [error, setError] = useState(null);
 
-    const httpConfig = (data, method, id) => {
+    const httpConfig = (data, method) => {
         if (method === "POST") {
             setConfig({
                 method,
@@ -35,7 +35,7 @@ export const useFetch = (url) => {
                 },
             });
             setMethod(method);
-            setId(id);
+            setId(data);
         }
     }
 
