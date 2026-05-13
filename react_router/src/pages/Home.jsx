@@ -56,7 +56,6 @@ const Home = () => {
           </table>
         )
       }
-
     </div>
   )
 }
