@@ -1,0 +1,21 @@
+.posts {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btnVoltar {
+    display: inline-block;
+    padding: 0.65rem 1rem;
+    border: 1px solid #00bfff;
+    border-radius: 8px;
+    color: #00bfff;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.btnVoltar:hover {
+    background-color: #00bfff;
+    color: #16171d;
+}
