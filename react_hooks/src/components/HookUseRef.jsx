@@ -7,7 +7,7 @@ const HookUseRef = () => {
 
     useEffect(() => {
         numberRef.current = numberRef.current + 1;
-    })
+    });
 
     return (
         <div>
