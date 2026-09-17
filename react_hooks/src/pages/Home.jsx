@@ -3,6 +3,7 @@ import HookUseReducer from "../components/HookUseReducer"
 import HookUseState from "../components/HookUseState"
 import HookUseRef from "../components/HookUseRef";
 import HookUseCallback from "../components/HookUseCallback";
+import HookUseMemo from "../components/HookUseMemo";
 
 // useContext
 import { useContext } from "react";
@@ -21,6 +22,7 @@ const Home = () => {
             <hr />
             <HookUseRef />
             <HookUseCallback />
+            <HookUseMemo />
         </div>
     )
 }
