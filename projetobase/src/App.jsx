@@ -11,7 +11,8 @@ import {
   Sparkles,
   TrendingUp,
   Trophy,
-  Clock
+  Clock,
+  CodeXml
 } from 'lucide-react';
 
 const navLinks = [
@@ -30,8 +31,8 @@ function App() {
       <header className="sticky top-0 z-40 border-b border-white/5">
         <div className="mx-auto max-w-6xl px-4 flex items-center justify-between">
           <a href="#" className="flex items-center gap-2">
-            <Sparkles className="size-5 text-fuchsia-400" />
-            <span className="font-bold tracking-tight">Minha Marca</span>
+            <CodeXml className="size-5 text-fuchsia-400" />
+            <span className="font-bold tracking-tight">Fantin Hub</span>
           </a>
 
           <nav className="hidden md:flex items-center gap-6 text-sm">
@@ -56,7 +57,7 @@ function App() {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <Sparkles className="size-5 text-fuchsia-400" />
-                        <span className="font-bold tracking-tight">Minha Marca</span>
+                        <span className="font-bold tracking-tight">Fantin Hub</span>
                       </div>
                       <button className="p-2 roinded-lh" onClick={() => setOpen(false)} >
                         <X className="size-5" />
@@ -261,6 +262,17 @@ function App() {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/5">
+        <div className="mx-auto max-w-6xl px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <CodeXml className="size-5 text-fuchsia-400" />
+            <span className="font-bold tracking-tight">Fantin Hub</span>
+          </div>
+          <p className="text-sm text-slate-400">&copy; {new Date().getFullYear()} Fantin Hub. Todos os direitos reservados.</p>
+        </div>
+      </footer>
     </div>
   )
 }
