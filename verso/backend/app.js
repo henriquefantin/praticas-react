@@ -12,6 +12,15 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Solve CORS error
+app.use(cors({ credentials: true, origin: process.env.ORIGIN }));
+
+// Upload directory
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
+// DB connection
+require('./config/dbConnection.js');
+
 // routes
 const router = require('./routes/Router.js');
 app.use(router);
