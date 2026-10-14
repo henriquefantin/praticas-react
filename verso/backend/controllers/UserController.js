@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
 const jwtSecret = process.env.JWT_SECRET;
 
@@ -12,6 +13,12 @@ const generateToken = (id) => {
         { expiresIn: '7d' }
     );
 };
+
+const generatePasswordHash = async (password) => {
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(password, salt);
+    return passwordHash;
+}
 
 // Register user and sign in
 const register = async (req, res) => {
@@ -25,8 +32,7 @@ const register = async (req, res) => {
     }
 
     // Generate password hash
-    const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(password, salt);
+    const passwordHash = await generatePasswordHash(password);
 
     // Create user
     const newUser = await User.create({
@@ -80,7 +86,37 @@ const getCurrentUser = async (req, res) => {
 
 // Update user
 const updateUser = async (req, res) => {
-    res.status(200).json({ message: 'Rota de atualização de usuário ainda não implementada.' });
+    const {name, password, bio} = req.body;
+    let profileImage = null;
+
+    if(req.file) {
+        profileImage = req.file.filename;
+    }
+
+    const reqUser = req.user;
+    const user = await User.findById(new mongoose.Types.ObjectId(reqUser._id)).select("-password");
+
+    if(name) {
+        user.name = name;
+    }
+
+    if(password) {
+        // Generate password hash
+        const passwordHash = await generatePasswordHash(password);
+        user.password = passwordHash;
+    }
+
+    if(profileImage) {
+        user.profileImage = profileImage;
+    }
+
+    if(bio) {
+        user.bio = bio;
+    }
+
+    await user.save();
+
+    res.status(200).json(user);
 };
 
 module.exports = {
