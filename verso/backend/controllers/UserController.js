@@ -78,8 +78,14 @@ const getCurrentUser = async (req, res) => {
     res.status(200).json(user);
 };
 
+// Update user
+const updateUser = async (req, res) => {
+    res.status(200).json({ message: 'Rota de atualização de usuário ainda não implementada.' });
+};
+
 module.exports = {
     register,
     login,
     getCurrentUser,
+    updateUser,
 };
