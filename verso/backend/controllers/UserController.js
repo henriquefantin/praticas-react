@@ -56,7 +56,7 @@ const register = async (req, res) => {
 // Sign in user
 const login = async (req, res) => {
     const { email, password } = req.body;
-    
+
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
@@ -86,31 +86,31 @@ const getCurrentUser = async (req, res) => {
 
 // Update user
 const updateUser = async (req, res) => {
-    const {name, password, bio} = req.body;
+    const { name, password, bio } = req.body;
     let profileImage = null;
 
-    if(req.file) {
+    if (req.file) {
         profileImage = req.file.filename;
     }
 
     const reqUser = req.user;
     const user = await User.findById(new mongoose.Types.ObjectId(reqUser._id)).select("-password");
 
-    if(name) {
+    if (name) {
         user.name = name;
     }
 
-    if(password) {
+    if (password) {
         // Generate password hash
         const passwordHash = await generatePasswordHash(password);
         user.password = passwordHash;
     }
 
-    if(profileImage) {
+    if (profileImage) {
         user.profileImage = profileImage;
     }
 
-    if(bio) {
+    if (bio) {
         user.bio = bio;
     }
 
@@ -119,9 +119,30 @@ const updateUser = async (req, res) => {
     res.status(200).json(user);
 };
 
+// Get user by ID
+const getUserById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findById(new mongoose.Types.ObjectId(id)).select("-password");
+        
+        // Check if user exists
+        if (!user) {
+            res.status(404).json({ errors: ['Usuário não encontrado.'] });
+            return;
+        }
+
+        res.status(200).json(user);
+    } catch (error){
+        res.status(404).json({ errors: ['Usuário não encontrado.'] });
+        return;
+    }
+};
+
 module.exports = {
     register,
     login,
     getCurrentUser,
     updateUser,
+    getUserById,
 };
