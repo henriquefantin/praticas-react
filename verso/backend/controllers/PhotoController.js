@@ -23,6 +23,7 @@ const insertPhoto = async (req, res) => {
         res.status(422).json({
             errors: ["Houve um problema, por favor tente novamente mais tarde."]
         });
+        return;
     }
 
     res.status(201).json(newPhoto);
@@ -41,6 +42,7 @@ const deletePhoto = async (req, res) => {
             res.status(404).json({
                 errors: ["Foto não encontrada!"]
             });
+            return;
         }
 
         // Check if photo belongs to user
@@ -48,6 +50,7 @@ const deletePhoto = async (req, res) => {
             res.status(422).json({
                 errors: ["Ocorreu um erro, por favvor tente novamente mais tarde."]
             });
+            return;
         }
 
         await Photo.findByIdAndDelete(photo._id);
@@ -79,11 +82,36 @@ const getUserPhotos = async (req, res) => {
         .sort([['createdAt', -1]])
         .exec();
     return res.status(200).json(photos);
-}
+};
+
+// Get photo by id
+const getPhotoById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const photo = await Photo.findById(new mongoose.Types.ObjectId(id));
+
+        // Check if photo exists
+        if(!photo){
+            res.status(404).json({
+                errors: ["Foto não encontrada"]
+            });
+            return;
+        }
+
+        res.status(200).json(photo);
+    } catch (error) {
+        res.status(404).json({
+            errors: ["Foto não encontrada!"]
+        });
+        return;
+    }
+};
 
 module.exports = {
     insertPhoto,
     deletePhoto,
     getAllPhotos,
     getUserPhotos,
+    getPhotoById,
 }
