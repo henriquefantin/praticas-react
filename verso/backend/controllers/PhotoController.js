@@ -193,13 +193,13 @@ const commentPhoto = async (req, res) => {
     const { id } = req.params;
     const { comment } = req.body;
     const reqUser = req.user;
-    
+
     try {
         const user = await User.findById(reqUser._id);
         const photo = await Photo.findById(id);
 
         // Check if photo exists
-        if(!photo){
+        if (!photo) {
             res.status(404).json({
                 errors: ["Foto não encontrada!"]
             });
@@ -230,6 +230,13 @@ const commentPhoto = async (req, res) => {
     }
 };
 
+// Search photos by title
+const searchPhotos = async (req, res) => {
+    const { q } = req.query;
+    const photos = await Photo.find({ title: new RegExp(q, "i") });
+    res.status(200).json(photos);
+}
+
 module.exports = {
     insertPhoto,
     deletePhoto,
@@ -239,4 +246,5 @@ module.exports = {
     updatePhoto,
     likePhoto,
     commentPhoto,
+    searchPhotos,
 }
