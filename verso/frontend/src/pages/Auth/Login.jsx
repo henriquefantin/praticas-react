@@ -17,10 +17,10 @@ const Login = () => {
 
   const dispatch = useDispatch();
 
-  const { login, error } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
-    e.preventDefoult();
+    e.preventDefault();
 
     const user = {
       email,
@@ -42,10 +42,11 @@ const Login = () => {
       <form onSubmit={handleSubmit}>
         <input type="email" placeholder="E-mail" onChange={(e) => setEmail(e.target.value)} value={email || ""} />
         <input type="password" placeholder="Senha" onChange={(e) => setPassword(e.target.value)} value={password || ""} />
-        {!loading && <input type="submit" value="Cadastrar" />}
+        {!loading && <input type="submit" value="Entrar" />}
         {loading && <input type="submit" value="Aguarde..." disabled />}
         {error && <Message msg={error} type="error"/>}
       </form>
+      <p>Não tem uma conta? <Link to="/register">Clique aqui</Link></p>
     </div>
   )
 }
