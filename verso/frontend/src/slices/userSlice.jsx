@@ -28,13 +28,22 @@ export const updateProfile = createAsyncThunk(
         const data = await userService.updateProfile(user, token);
 
         // Check for errors
-        if(data.errors) {
+        if (data.errors) {
             return thunkAPI.rejectWithValue(data.errors[0]);
         }
 
         return data;
     }
 );
+
+// Get user details
+export const getUserDetails = createAsyncThunk(
+    "user/get",
+    async (id, thunkAPI) => {
+        const data = await userService.getUserDetails(id);
+        return data;
+    }
+)
 
 export const userSlice = createSlice({
     name: "user",
@@ -68,10 +77,19 @@ export const userSlice = createSlice({
                 state.message = "Usuário atualizado com sucesso!"
             })
             .addCase(updateProfile.rejected, (state, action) => {
-                console.log(state, action)
                 state.loading = false;
                 state.error = action.payload;
                 state.user = {};
+            })
+            .addCase(getUserDetails.pending, (state) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getUserDetails.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                state.success = true;
+                state.user = action.payload;
             });
     }
 });

@@ -59,19 +59,15 @@ const EditProfile = () => {
 
         // Build form data
         const formData = new FormData();
-        const userFormData = await Object.keys(userData)
-            .forEach(
-                (key) => formData.append(key, userData[key])
-            );
-        console.log(`userFormData: ${userFormData}`)
-            
-        formData.append("user", userFormData);
+        Object.keys(userData).forEach(
+            (key) => formData.append(key, userData[key])
+        );
 
-        await dispatch(updateProfile(userFormData));
+        await dispatch(updateProfile(formData));
 
         setTimeout(() => {
             dispatch(resetMessage());
-        }, 2000);
+        }, 3500);
     }
 
     const handleFile = (e) => {
