@@ -73,9 +73,51 @@ const getPhoto = async (id, token) => {
 
 // Like a photo
 const like = async (id, token) => {
-    const config = requestConfig("PUT", null, token);
+    const config = await requestConfig("PUT", null, token);
     try {
         const res = fetch(`${api}/photos/like/${id}`, config)
+            .then((res) => res.json())
+            .catch((err) => err);
+
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Add coment a photo
+const comment = async (data, id, token) => {
+    const config = requestConfig("PUT", data, token);
+    try {
+        const res = await fetch(`${api}/photos/comment/${id}`, config)
+            .then((res) => res.json())
+            .catch((err) => err);
+
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Get all photos
+const getPhotos = async (token) => {
+    const config = requestConfig("GET", null, token);
+    try {
+        const res = await fetch(`${api}/photos`, config)
+            .then((res) => res.json())
+            .catch((err) => err);
+
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Search photo by title
+const searchPhotos = async(query, token) => {
+    const config = requestConfig("GET", null, token);
+    try {
+        const res = await fetch(`${api}/photos/search?q=${query}`, config)
             .then((res) => res.json())
             .catch((err) => err);
 
@@ -92,6 +134,9 @@ const photoService = {
     updatePhoto,
     getPhoto,
     like,
+    comment,
+    getPhotos,
+    searchPhotos,
 };
 
 export default photoService;
